@@ -2,12 +2,22 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.write("""
-# 노량진 최애 점심 메뉴 
-Hello 노량진
+st.title("팀순신 점심 기록장")
+st.subheader("입력")
+menu_name = st.text_input("메뉴 이름", placeholder="예: 김치찌개")
+member_name = st.text_input("먹은 사람", value = "Lucas")
+dt = st.date_input("점심 날짜")
 
-![img](https://blog.kakaocdn.net/dn/0mySg/btqCUccOGVk/nQ68nZiNKoIEGNJkooELF1/img.jpg)
-""")
+
+
+
+
+
+
+
+
+
+
 
 df = pd.read_csv('note/lunch_menu.csv')
 
