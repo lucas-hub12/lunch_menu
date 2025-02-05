@@ -41,7 +41,7 @@ def insert_menu(menu_name, member_name, dt):
 
 st.subheader("입력")
 menu_name = st.text_input("메뉴 이름", placeholder="예: 김치찌개")
-member_name = st.text_input("먹은 사람", value = "Lucas")
+member_name = st.text_input("먹은 사람", value = "lucas")
 dt = st.date_input("점심 날짜")
 
 isPress = st.button("메뉴 저장")
@@ -127,6 +127,6 @@ if isPress:
         # 📌 5️⃣ 함수 실행하여 데이터 삽입
         insert_data(df)
     except Exception as e:
-        st.warningr(f"❌ 인서트 오류 발생: {e}")
+        st.warning(f"❌ 인서트 오류(데이터 중복)발생: {e}")
          
 
