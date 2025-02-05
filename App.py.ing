@@ -49,15 +49,70 @@ st.title(f"점심기록장{db_name}")
 
 st.subheader("입력")
 menu_name = st.text_input("메뉴 이름", placeholder="예: 김치찌개")
-member_name = st.text_input("먹은 사람", value = "lucas")
+#member_name = st.text_input("먹은 사람", value = "lucas")
+
+if "visibility" not in st.session_state:
+   st.session_state.visibility = "visible"
+   st.session_state.disabled = False
+
+   col1, col2 = st.columns(2)
+
+with col2:
+    st.checkbox("Disable selectbox widget", key="disabled")
+    st.radio(
+        "👈 Set selectbox label visibility",
+        key="visibility",
+        options=["visible", "hidden", "collapsed"],
+    )
+
+with col1:
+     option = st.selectbox(
+        "먹은 사람",
+        ("TOM","lucas","zzin"),
+        label_visibility=st.session_state.visibility,
+        disabled=st.session_state.disabled,
+    )
+
+member_name = option
+st.subheader("입력")
+menu_name = st.text_input("메뉴 이름", placeholder="예: 김치찌개")
+#member_name = st.text_input("먹은 사람", value = "lucas")
+
+if "visibility" not in st.session_state:
+    st.session_state.visibility = "visible"
+    st.session_state.disabled = False
+
+col1, col2 = st.columns(2)
+
+with col2:
+    st.checkbox("Disable selectbox widget", key="disabled")
+    st.radio(
+        "👈 Set selectbox label visibility",
+        key="visibility",
+        options=["visible", "hidden", "collapsed"],
+    )
+
+with col1:
+     option = st.selectbox(
+        "먹은 사람",
+        ("TOM","lucas","zzin"),
+        label_visibility=st.session_state.visibility,
+        disabled=st.session_state.disabled,
+    )
+
 dt = st.date_input("점심 날짜")
 
-option = st.selectbox(
-    "How would you like to be contacted?",
-    ("Email", "Home phone", "Mobile phone"),
-)
+isPress = st.button("메뉴 저장")
 
-st.write("You selected:", option)
+if isPress:
+    if menu_name and member_name and dt:
+        if insert_menu(menu_name, member_name, dt):
+           st.success("입력 성공")
+        else:
+            st.error(f"입력 실패")
+    else:
+        st.warning(f"모든 값을 입력해주세요!")
+dt = st.date_input("점심 날짜")
 
 isPress = st.button("메뉴 저장")
 
