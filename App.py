@@ -49,15 +49,15 @@ st.title(f"점심기록장{db_name}")
 
 st.subheader("입력")
 menu_name = st.text_input("메뉴 이름", placeholder="예: 김치찌개")
-member_name = st.text_input("먹은 사람", value = "lucas")
+#member_name = st.text_input("먹은 사람", value = "lucas")
 dt = st.date_input("점심 날짜")
 
-option = st.selectbox(
-    "How would you like to be contacted?",
-    ("Email", "Home phone", "Mobile phone"),
+member_name = st.selectbox(
+    "먹은 사람",
+    ("lucas","zzin"),
 )
 
-st.write("You selected:", option)
+st.write("You selected:", member_name)
 
 isPress = st.button("메뉴 저장")
 
