@@ -2,13 +2,27 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import psycopg
+import os
+from dotenv import load_dotenv
 
+# https://docs.streamlit.io/develop/concepts/connections/secrets-management
+# DB_CONFIG = {
+   # "dbname": "sunsindb",
+   # "user": "sunsin",
+   # "password": "mysecretpassword",
+   # "host": "localhost",
+   # "port": "5432",
+#}
+# 위 정보를 안보이게 하는 방법은 아래 참고
+
+load_dotenv()
 DB_CONFIG = {
-    "dbname": "sunsindb",
-    "user": "sunsin",
-    "password": "mysecretpassword",
-    "host": "localhost",
-    "port": "5432",
+    #"user": st.secrets["db_username"]    
+    "dbname": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USERNAME"),
+    "password": os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"),
+    "port": os.getenv("DB_PORT"),
 }
 
 def get_connection():
