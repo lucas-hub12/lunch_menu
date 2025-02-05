@@ -4,7 +4,8 @@
 - [ ] 알람(입력하지 않은 사람들에게...) 
 - [ ] CSV to DB 
 
-## Instal DB with docker
+## Ready 
+### Instal DB with docker
 - https://hub.docker.com/_/postgres
 ```bash
 $ sudo docker run --name local-postgres \
@@ -15,7 +16,7 @@ $ sudo docker run --name local-postgres \
 -d postgres:15.10
 ```
 
-# Create Table
+### Create Table
 - postgres
 ``` sql
 CREATE TABLE public.lunch_menu (
@@ -26,4 +27,23 @@ CREATE TABLE public.lunch_menu (
 	CONSTRAINT lunch_menu_pk PRIMARY KEY (id)
 ```
 
+## Dev
+```bash
+# DB Check, Start, Stop
+$ sudo docker ps -a
+$ sudo docker start local-postgres
+$ sudo docker stop local-postgres
 
+# Into CONTAINER
+$ sudo docker exec -it local-postgres bash
+
+```
+- RUN
+```bash
+# 디비 정보에 맞춰 수정
+$ cp env.dummy .env
+
+# 서버시작
+$ streamlit run App.py
+
+```
