@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 # 위 정보를 안보이게 하는 방법은 아래 참고
 
 load_dotenv()
+db_name = os.getenv("DB_NAME")
 DB_CONFIG = {
     #"user": st.secrets["db_username"]    
     "dbname": os.getenv("DB_NAME"),
@@ -38,6 +39,8 @@ def insert_menu(menu_name, member_name, dt):
           conn.commit()
           cursor.close()
           conn.close()
+
+st.title(f"점심기록장{db_name}")
 
 st.subheader("입력")
 menu_name = st.text_input("메뉴 이름", placeholder="예: 김치찌개")
@@ -94,9 +97,13 @@ gdf
 
 # 📊 Matplotlib로 바 차트 그리기
 # https://docs.streamlit.io/develop/api-reference/charts/st.pyplot
-fig, ax = plt.subplots()
-gdf.plot(x="member_name", y="menu_name", kind="bar", ax=ax)
-st.pyplot(fig)
+try: 
+    fig, ax = plt.subplots()
+    gdf.plot(x="member_name", y="menu_name", kind="bar", ax=ax)
+    st.pyplot(fig)
+except Exception as e:
+    st.warning(f"차트를 그리기에 충분한 데이터가 없습니다.")
+    print(f"Exception:{e}")
 
 # TO DO
 # CSV 로드해서 한번에 다 디비에 INSERT 하는거
