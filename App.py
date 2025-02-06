@@ -36,7 +36,7 @@ def insert_menu(menu_name, member_id, dt):
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute(
-                  "INSERT INTO lunch_menu (menu_name, member_name, dt) VALUES (%s,%s,%s);",
+                  "INSERT INTO lunch_menu (menu_name, member_id, dt) VALUES (%s,%s,%s);",
                   (menu_name, member_id, dt)
                   )
         conn.commit()
@@ -77,8 +77,16 @@ if isPress:
 
 st.subheader("확인")
 
-query = "select menu_name,member_name,dt from lunch_menu order by dt desc"
-
+query = """
+SELECT
+	l.menu_name,
+	m.name,
+	l.dt
+FROM 
+	lunch_menu l  
+	inner join member m
+	on l.member_id = m.id
+"""
 conn = get_connection()
 cursor = conn.cursor()
 cursor.execute(query)
@@ -88,30 +96,22 @@ rows = cursor.fetchall()
 cursor.close()
 conn.close()
 
+df = pd.read_csv('note/lunch_menu.csv')
+
+start_index= df.columns.get_loc('2025-01-07')
+mdf = df.drop(columns=['gmail', 'github', 'domain', 'vercel', 'role'])
+df_melt = mdf.melt(id_vars=['ename'], var_name='dt', value_name='menu_name')
+
+melted_df = df_melt[~df_melt['menu_name'].isin(['-', 'x', '<결석>'])]
+
 # selected_df = pd.DataFrame([[1,2,3],[4,5,6]], columns=['a','b','c'])
 selected_df = pd.DataFrame(rows, columns=['menu_name', 'member_name','dt'])
 selected_df
 
-
-# 📌 2️⃣ 데이터 가져오기
-def load_data():
-    conn = get_connection()
-    query = "select menu_name,member_name,dt from lunch_menu order by dt desc"
-    df = pd.read_sql(query, conn)  # SQL 실행 후 pandas DataFrame으로 변환
-    conn.close()
-    return df
-
-# 📌 3️⃣ Streamlit UI 구성
 st.subheader("통계")
 
-# 📌 4️⃣ 데이터 로드
-df = load_data()
-
-# 📌 5️⃣ 불필요한 값 제거
-not_na_df = df[~df['menu_name'].isin(['-', 'x', '<결석>'])]
-
 # 📌 6️⃣ 직원별 메뉴 선택 횟수 계산
-gdf = not_na_df.groupby('member_name')['menu_name'].count().reset_index()
+gdf = selected_df.groupby('member_name')['menu_name'].count().reset_index()
 gdf
 
 # 📊 Matplotlib로 바 차트 그리기
@@ -130,29 +130,17 @@ st.subheader("벌크 인서트")
 isPress = st.button("한방에 인서트")
 
 if isPress:
-    try:    
-        df = pd.read_csv('note/lunch_menu.csv')
-        start_idx = df.columns.get_loc('2025-01-07')
-        melted_df = df.melt(id_vars=['ename'], value_vars=df.columns[start_idx:-2],
-                    var_name='dt', value_name='menu') 
-        df = melted_df[['ename', 'dt', 'menu']]
-
-        def insert_data(df):
-             conn = get_connection()
-             cursor = conn.cursor()
-            # SQL INSERT 문 (파라미터 바인딩)
-             sql = "INSERT INTO lunch_menu (member_name, dt, menu_name) VALUES (%s, %s, %s)"
-            # 튜플 형태로 변환 후 executemany 사용
-             data = list(df.itertuples(index=False, name=None))
-             print("첫 5개 데이터:", data[:5])
-
-             cursor.executemany(sql, data)  # 대량 데이터 삽입 최적화
-             conn.commit()  # 변경사항 저장
-             conn.close()  # 연결 닫기
-             st.success(f"인서트 완료!!{isPress}")
-        # 📌 5️⃣ 함수 실행하여 데이터 삽입
-        insert_data(df)
-    except Exception as e:
-        st.warning(f"❌ 인서트 오류(데이터 중복)발생: {e}")
-         
+    conn = get_connection()
+    cursor = conn.cursor()
+    for i in range(len(melted_df)):
+        m_id = members[melted_df.iloc[i]['ename']]
+        cursor.execute("INSERT INTO lunch_menu (menu_name, member_id, dt) VALUES (%s, %s, %s)",
+                       (melted_df.iloc[i]['ename'],
+                        m_id,
+                        melted_df.iloc[i]['dt']))
+    conn.commit()  # 변경사항 저장
+    conn.close()  # 연결 닫기
+    st.success(f"인서트 완료!!{isPress}")
+else:
+     st.warning(f"❌ 인서트 오류(데이터 중복)발생")
 
