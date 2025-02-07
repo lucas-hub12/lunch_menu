@@ -1,25 +1,9 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from lunch_menu.db import get_connection, db_name
+from lunch_menu.db import get_connection, db_name, insert_menu
 
 members = { "TOM" : 1, "cho" : 2, "hyun" : 3, "JERRY" : 4, "SEO" : 5, "jiwon" : 6, "jacob" : 7, "heejin" : 8, "lucas" : 9, "nuni" : 10 }
-
-def insert_menu(menu_name, member_id, dt):
-    try:
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-                  "INSERT INTO lunch_menu (menu_name, member_id, dt) VALUES (%s,%s,%s);",
-                  (menu_name, member_id, dt)
-                  )
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return True
-    except Exception as e:
-           print(f"Exception:{e}:")
-           return False
 
 st.title(f"점심기록장{db_name}")
 
