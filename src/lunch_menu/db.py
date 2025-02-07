@@ -1,3 +1,4 @@
+import pandas as pd
 import psycopg
 from dotenv import load_dotenv
 import os
@@ -26,7 +27,7 @@ def insert_menu(menu_name, member_id, dt):
         cursor.execute(
                   "INSERT INTO lunch_menu (menu_name, member_id, dt) VALUES (%s,%s,%s);",
                   (menu_name, member_id, dt)
-                  )
+                      )
         conn.commit()
         cursor.close()
         conn.close()
@@ -35,4 +36,24 @@ def insert_menu(menu_name, member_id, dt):
            print(f"Exception:{e}:")
            return False
 
+def select_table():
+    query = """
+            SELECT
+            l.menu_name,
+            m.name,
+            l.dt
+            FROM
+            lunch_menu l
+            inner join member m
+            on l.member_id = m.id
+         """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
 
+    # selected_df = pd.DataFrame([[1,2,3],[4,5,6]], columns=['a','b','c'])
+    selected_df = pd.DataFrame(rows, columns=['menu_name', 'member_name','dt'])
+    return selected_df
