@@ -9,7 +9,7 @@
 - https://hub.docker.com/_/postgres
 ```bash
 $ sudo docker run --name local-postgres \
--e POSTGRES_USER=sunsin\
+-e POSTGRES_USER=sunsin \
 -e POSTGRES_PASSWORD=mysecretpassword \
 -e POSTGRES_DB=sunsindb \
 -p 5432:5432 \
