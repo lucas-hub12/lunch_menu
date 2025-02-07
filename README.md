@@ -128,3 +128,5 @@ $ cp env.dummy .env
 # 서버시작
 $ streamlit run App.py
 ```
+
+: D
