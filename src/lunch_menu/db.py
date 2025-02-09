@@ -75,6 +75,31 @@ def rank_menu():
     return df
 
 
+def select_members_without_lunch():
+    query = """
+            select 
+            m.id, 
+            m.name,
+            lm.menu_name,
+            lm.dt,
+            created_at AS inserted_time,
+            CURRENT_DATE AT TIME ZONE 'Asia/Seoul' AS today_timestamp,
+            DATE(CURRENT_DATE AT TIME ZONE 'Asia/Seoul') AS today_date
+            FROM member m
+            LEFT JOIN lunch_menu lm 
+            ON m.id = lm.member_id 
+            AND lm.dt = DATE(CURRENT_DATE AT TIME ZONE 'Asia/Seoul')
+            """
+ # with 구문을 사용하여 자동으로 연결 및 커서 닫기
+    with psycopg.connect(**DB_CONFIG) as conn:
+        with conn.cursor() as cursor:
+             cursor.execute(query)
+             rows = cursor.fetchall()
+             selected_columns = [col.name for col in cursor.description]  # 컬럼 이름 가져오기
+            
+ # DataFrame 생성
+    df = pd.DataFrame(rows, columns=selected_columns)
+    return df
 
 
 
