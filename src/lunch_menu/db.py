@@ -56,7 +56,25 @@ def select_table():
 
     # selected_df = pd.DataFrame([[1,2,3],[4,5,6]], columns=['a','b','c'])
     selected_df = pd.DataFrame(rows, columns=['menu_name', 'member_name','dt'])
+    selected_df = selected_df.sort_values(by='dt', ascending=False)
     return selected_df
+
+
+def rank_menu():
+    conn = get_connection()
+
+    query = """
+            SELECT menu_name, COUNT(*) AS order_count
+            FROM lunch_menu
+            GROUP BY menu_name
+            ORDER BY order_count DESC
+            limit 5;
+            """
+    df = pd.read_sql(query, conn)
+    conn.close()
+    return df
+
+
 
 
 
