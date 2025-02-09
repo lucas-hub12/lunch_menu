@@ -4,12 +4,24 @@
 - [ ] 알람(입력하지 않은 사람들에게...) 
 - [ ] CSV to DB 
 
+## Start
+```bash
+$ git branch -r
+$ git checkout -t origin/0.4/Refactoring
+$  git branch
+$ pyenv versions
+$ curl -sSL https://pdm-project.org/install-pdm.py | python -
+$ pdm venv create
+$ source .venv/bin/activate
+$ pdm install
+```
+
 ## Ready 
 ### Instal DB with docker
 - https://hub.docker.com/_/postgres
 ```bash
 $ sudo docker run --name local-postgres \
--e POSTGRES_USER=sunsin\
+-e POSTGRES_USER=sunsin \
 -e POSTGRES_PASSWORD=mysecretpassword \
 -e POSTGRES_DB=sunsindb \
 -p 5432:5432 \
@@ -115,5 +127,6 @@ $ cp env.dummy .env
 
 # 서버시작
 $ streamlit run App.py
-
 ```
+
+: D
