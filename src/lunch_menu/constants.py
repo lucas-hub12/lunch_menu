@@ -1,0 +1,1 @@
+API_AGE = "https://ac.lucas12.store/api/py/ageCalculator"
